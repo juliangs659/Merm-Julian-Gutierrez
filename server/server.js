@@ -3,6 +3,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const app = require('./app');
 
+
+// Constante con todas las variables de entorno 
+// las variables de entorno se guardan en .env
 const { MONGO_URI_MERM, MONGO_DB_MERM, PORT_MERM = 5000 } = process.env;
 
 // Usar variables de entorno
