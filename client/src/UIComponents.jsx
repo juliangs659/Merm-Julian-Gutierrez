@@ -1,18 +1,26 @@
 import React from 'react';
 
+// Constantes de filtro duplicadas (también están en App.jsx)
+// Podrían centralizarse, pero para simplicidad las mantenemos aquí
 const FILTERS = {
   ALL: 'all',
-  PENDING: 'pending',
+  PENDING: 'pending', 
   COMPLETED: 'completed'
 };
 
+/**
+ * Componente que renderiza los botones de filtro y estadísticas
+ * Calcula las estadísticas internamente para simplificar App.jsx
+ */
 export function FilterButtons({ filter, onFilterChange, todos, onClearCompleted }) {
+  // Calcular estadísticas de las tareas
   const total = todos.length;
   const completed = todos.filter(t => t.done).length;
   const pending = total - completed;
 
   return (
     <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+      {/* Botón para mostrar todas las tareas */}
       <FilterButton
         active={filter === FILTERS.ALL}
         onClick={() => onFilterChange(FILTERS.ALL)}
@@ -22,6 +30,7 @@ export function FilterButtons({ filter, onFilterChange, todos, onClearCompleted 
         Todas ({total})
       </FilterButton>
       
+      {/* Botón para mostrar solo tareas pendientes */}
       <FilterButton
         active={filter === FILTERS.PENDING}
         onClick={() => onFilterChange(FILTERS.PENDING)}
@@ -31,6 +40,7 @@ export function FilterButtons({ filter, onFilterChange, todos, onClearCompleted 
         Pendientes ({pending})
       </FilterButton>
       
+      {/* Botón para mostrar solo tareas completadas */}
       <FilterButton
         active={filter === FILTERS.COMPLETED}
         onClick={() => onFilterChange(FILTERS.COMPLETED)}
@@ -40,6 +50,7 @@ export function FilterButtons({ filter, onFilterChange, todos, onClearCompleted 
         Completadas ({completed})
       </FilterButton>
       
+      {/* Botón para limpiar todas las completadas - solo si hay alguna */}
       {completed > 0 && (
         <button 
           onClick={onClearCompleted}
@@ -61,18 +72,24 @@ export function FilterButtons({ filter, onFilterChange, todos, onClearCompleted 
   );
 }
 
+/**
+ * Componente auxiliar para renderizar botones de filtro individuales
+ * Maneja el estilo visual según si está activo o no
+ */
 function FilterButton({ active, onClick, children, color, backgroundColor }) {
   return (
     <button 
       onClick={onClick}
       style={{
         padding: '0.5rem 1rem',
+        // Borde más grueso y color personalizado si está activo
         border: active ? `2px solid ${color}` : '1px solid #e2e8f0',
         borderRadius: '8px',
+        // Fondo personalizado si está activo, blanco si no
         background: active ? backgroundColor : 'white',
         cursor: 'pointer',
         fontSize: '0.875rem',
-        transition: 'all 0.2s ease'
+        transition: 'all 0.2s ease' // Animación suave
       }}
     >
       {children}
@@ -80,7 +97,15 @@ function FilterButton({ active, onClick, children, color, backgroundColor }) {
   );
 }
 
+/**
+ * Componente que muestra un estado vacío personalizado según el filtro activo
+ * Mejora la experiencia de usuario cuando no hay tareas que mostrar
+ */
 export function EmptyState({ filter }) {
+  /**
+   * Función que retorna contenido apropiado según el filtro activo
+   * Cada filtro tiene su propio mensaje motivacional
+   */
   const getEmptyContent = () => {
     switch (filter) {
       case FILTERS.COMPLETED:
@@ -95,7 +120,7 @@ export function EmptyState({ filter }) {
           title: '¡Genial! No tienes tareas pendientes',
           subtitle: 'Disfruta tu tiempo libre'
         };
-      default:
+      default: // FILTERS.ALL o cualquier otro caso
         return {
           icon: '✨',
           title: 'No tienes tareas aún',
@@ -104,12 +129,14 @@ export function EmptyState({ filter }) {
     }
   };
 
+  // Obtener el contenido apropiado según el filtro
   const { icon, title, subtitle } = getEmptyContent();
 
   return (
     <div className="empty-state">
       <div className="empty-icon">{icon}</div>
       <div className="empty-text">{title}</div>
+      {/* Mostrar subtítulo solo si existe */}
       {subtitle && <div className="empty-subtext">{subtitle}</div>}
     </div>
   );
