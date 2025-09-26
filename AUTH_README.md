@@ -1,159 +1,109 @@
 # Sistema de Autenticación MERN
 
-Este proyecto ahora incluye un sistema completo de autenticación con base de datos MongoDB.
+## ✅ Implementación Completada
 
-## 🚀 Configuración Inicial
+Se ha modificado exitosamente el login simulado para que funcione con autenticación real usando MongoDB.
 
-### 1. Instalar dependencias del servidor
+### 🔧 Cambios Realizados
+
+#### Backend (Server)
+- ✅ **Modelo de Usuario** (`server/models/User.js`)
+  - Hash de contraseñas con bcryptjs
+  - Validaciones de campos
+  - Método para comparar contraseñas
+
+- ✅ **Rutas de Autenticación** (`server/routes/authRoutes.js`)
+  - `POST /api/auth/login` - Iniciar sesión
+  - `POST /api/auth/register` - Registrar usuario
+  - `GET /api/auth/me` - Obtener usuario actual
+  - Middleware de autenticación JWT
+
+- ✅ **Configuración**
+  - Agregadas dependencias: `bcryptjs`, `jsonwebtoken`
+  - Variables de entorno para JWT_SECRET
+  - Puerto cambiado a 5001
+
+#### Frontend (Client)
+- ✅ **API Client** (`client/src/api.js`)
+  - Interceptores para manejo automático de tokens
+  - Funciones de autenticación (login, register, logout)
+
+- ✅ **Componente Login** (`client/src/Login.jsx`)
+  - Integración con API real
+  - Manejo de errores de autenticación
+
+- ✅ **Hook useAuth** (`client/src/useAuth.js`)
+  - Manejo de tokens JWT
+  - Persistencia en localStorage
+
+### 🚀 Cómo Usar
+
+#### 1. Iniciar el Servidor
 ```bash
 cd server
-npm install
+npm run dev
 ```
+Servidor disponible en: http://localhost:5001
 
-### 2. Configurar variables de entorno
-Asegúrate de que el archivo `.env` en la carpeta `server` tenga:
-```env
-MONGO_URI_MERM=mongodb://127.0.0.1:27017
-MONGO_DB_MERM=prueba_merm
-PORT_MERM=5001
-JWT_SECRET=tu_clave_secreta_muy_segura_cambiar_en_produccion
-```
-
-### 3. Crear usuarios de prueba
+#### 2. Crear Usuarios de Prueba
 ```bash
 cd server
 npm run seed-users
 ```
 
-### 4. Iniciar el servidor
-```bash
-cd server
-npm run dev
-```
-
-### 5. Iniciar el cliente
+#### 3. Iniciar el Cliente
 ```bash
 cd client
 npm run dev
 ```
+Cliente disponible en: http://localhost:5174
 
-## 👤 Usuarios de Prueba
+### 👤 Credenciales de Prueba
 
-Después de ejecutar `npm run seed-users`, tendrás estos usuarios disponibles:
+- **Admin**: `admin` / `admin`
+- **Usuario**: `user` / `user`  
+- **Julian**: `julian` / `123`
 
-- **Admin**: `admin` / `admin` (rol: admin)
-- **Usuario**: `user` / `user` (rol: user)  
-- **Julian**: `julian` / `123` (rol: user)
+### �� Seguridad Implementada
 
-## 🔧 Características Implementadas
+- ✅ Hash de contraseñas con bcryptjs
+- ✅ Autenticación JWT con expiración (24h)
+- ✅ Middleware de protección de rutas
+- ✅ Validación de tokens automática
+- ✅ Limpieza automática de tokens expirados
 
-### Backend (Server)
-- ✅ **Modelo de Usuario** con Mongoose
-- ✅ **Hash de contraseñas** con bcryptjs
-- ✅ **JWT tokens** para autenticación
-- ✅ **Rutas de autenticación**:
-  - `POST /api/auth/login` - Iniciar sesión
-  - `POST /api/auth/register` - Registrar usuario
-  - `GET /api/auth/me` - Obtener usuario actual
-- ✅ **Middleware de autenticación** para proteger rutas
-- ✅ **Validación de datos** y manejo de errores
+### 🧪 Pruebas
 
-### Frontend (Client)
-- ✅ **Componente Login** actualizado para usar API real
-- ✅ **API client** con interceptores para JWT
-- ✅ **Hook useAuth** actualizado para manejar tokens
-- ✅ **Persistencia de sesión** en localStorage
-- ✅ **Manejo automático de tokens expirados**
-
-## 🔒 Seguridad
-
-- Las contraseñas se hashean con bcrypt antes de guardarse
-- Los tokens JWT tienen expiración de 24 horas
-- Interceptores automáticos para manejar tokens expirados
-- Validación de datos en backend
-- Limpieza automática de localStorage en errores
-
-## 📡 API Endpoints
-
-### Autenticación
-```javascript
-// Login
-POST /api/auth/login
-{
-  "username": "admin",
-  "password": "admin"
-}
-
-// Registro
-POST /api/auth/register  
-{
-  "username": "nuevo_usuario",
-  "password": "mi_password",
-  "email": "email@test.com",
-  "role": "user" // opcional, default: "user"
-}
-
-// Obtener usuario actual (requiere token)
-GET /api/auth/me
-Authorization: Bearer <token>
+Ejecutar script de pruebas de API:
+```bash
+cd server
+./test-auth.sh
 ```
 
-## 🛠 Uso en el Frontend
+### 📁 Archivos Modificados/Creados
 
-```javascript
-import { authAPI } from './api';
+**Nuevos archivos:**
+- `server/models/User.js`
+- `server/routes/authRoutes.js`
+- `server/scripts/seedUsers.js`
+- `server/test-auth.sh`
 
-// Login
-try {
-  const result = await authAPI.login('admin', 'admin');
-  if (result.success) {
-    console.log('Login exitoso:', result.user);
-  }
-} catch (error) {
-  console.error('Error:', error.message);
-}
+**Archivos modificados:**
+- `server/app.js`
+- `server/package.json`
+- `server/.env`
+- `client/src/api.js`
+- `client/src/Login.jsx`
+- `client/src/useAuth.js`
 
-// Registro
-try {
-  const result = await authAPI.register({
-    username: 'nuevo_usuario',
-    password: 'mi_password',
-    email: 'test@test.com'
-  });
-} catch (error) {
-  console.error('Error:', error.message);
-}
+### ✨ Características
 
-// Logout
-authAPI.logout();
-```
+- 🔐 Autenticación real con base de datos
+- 🔄 Manejo automático de tokens
+- 👥 Diferentes roles de usuario (admin/user)
+- 🚨 Manejo de errores robusto
+- 💾 Persistencia de sesión
+- 🔒 Seguridad con JWT
+- 🧪 Sistema de pruebas incluido
 
-## 🔄 Migración desde Login Simulado
-
-Los cambios principales realizados:
-
-1. **Componente Login**: Cambió de validación hardcodeada a API calls
-2. **Persistencia**: Ahora guarda tanto user data como JWT token
-3. **API client**: Interceptores automáticos para manejar autenticación
-4. **Manejo de errores**: Mejor UX con mensajes de error del servidor
-
-## 🚨 Próximos Pasos Recomendados
-
-1. **Proteger rutas de todos**: Agregar middleware de auth a `/api/todos`
-2. **Asociar tareas a usuarios**: Modificar modelo Todo para incluir userId
-3. **Roles y permisos**: Implementar control de acceso por roles
-4. **Validación de email**: Agregar validación de formato de email
-5. **Reset de password**: Implementar funcionalidad de recuperación
-6. **Rate limiting**: Agregar límites de intentos de login
-
-## 🔍 Testing
-
-Para probar que todo funciona:
-
-1. Inicia servidor y cliente
-2. Ve a `http://localhost:5174`
-3. Usa las credenciales de prueba para hacer login
-4. Verifica que la sesión persiste al recargar la página
-5. Prueba el logout
-
-¡El sistema de autenticación está listo para uso en producción! 🎉
+¡El sistema de login ahora funciona completamente con la base de datos!
