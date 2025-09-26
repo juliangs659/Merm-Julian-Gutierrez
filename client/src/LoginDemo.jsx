@@ -2,7 +2,6 @@ import React from 'react';
 
 /**
  * Componente que muestra información sobre las credenciales de prueba
- * Solo para demostración - no usar en producción
  */
 export function LoginDemo() {
   return (

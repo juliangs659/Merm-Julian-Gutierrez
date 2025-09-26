@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { authAPI } from './api';
 
 /**
- * Componente de login sencillo
- * Por simplicidad, usa validación en el frontend (no recomendado para producción)
+ * Componente para el login con autenticación de base de datos
  */
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -12,36 +12,29 @@ export default function Login({ onLogin }) {
 
   /**
    * Maneja el envío del formulario de login
-   * Validación simple: admin/admin o user/user
+   * Ahora usa la API real para autenticación
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Simular un pequeño delay de autenticación
-    setTimeout(() => {
-      // Validación simple (en producción esto se haría en el backend)
-      if (
-        (username === 'admin' && password === 'admin') ||
-        (username === 'user' && password === 'user') ||
-        (username === 'julian' && password === '123')
-      ) {
+    try {
+      // Llamar a la API de login
+      const response = await authAPI.login(username.trim(), password);
+      
+      if (response.success) {
         // Login exitoso
-        const userData = {
-          username,
-          role: username === 'admin' ? 'admin' : 'user',
-          loginTime: new Date().toISOString()
-        };
-        
-        // Guardar en localStorage para persistencia
-        localStorage.setItem('user', JSON.stringify(userData));
-        onLogin(userData);
+        onLogin(response.user);
       } else {
-        setError('Usuario o contraseña incorrectos');
+        setError(response.message || 'Error en el login');
       }
+    } catch (error) {
+      console.error('Error en login:', error);
+      setError(error.message || 'Error de conexión con el servidor');
+    } finally {
       setLoading(false);
-    }, 800); // Simular delay de red
+    }
   };
 
   return (

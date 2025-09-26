@@ -13,13 +13,16 @@ export function useAuth() {
    */
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
       try {
         const userData = JSON.parse(savedUser);
         setUser(userData);
       } catch (error) {
         // Si hay error al parsear, limpiar localStorage
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
     }
     setLoading(false);
@@ -41,6 +44,7 @@ export function useAuth() {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token'); // También limpiar el token JWT
   };
 
   /**
